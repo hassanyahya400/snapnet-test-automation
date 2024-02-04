@@ -47,9 +47,9 @@ public class CustomerInfoPage extends BasePage
     {
         try
         {
-            firstNameInput.sendKeys(user.getRandomName());
-            lastNameInput.sendKeys(user.getRandomName());
-            postalCodeInput.sendKeys(user.getRandomPostalCode());
+            firstNameInput.sendKeys(user.firstName);
+            lastNameInput.sendKeys(user.lastName);
+            postalCodeInput.sendKeys(user.postalCode);
             continueButton.click();
         }
         catch (Exception e)

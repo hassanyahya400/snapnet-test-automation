@@ -1,6 +1,7 @@
 package pages;
 
 import base.BaseTest;
+import data.Product;
 import data.User;
 import org.junit.jupiter.api.*;
 import pages.checkout.CompletionPage;
@@ -10,121 +11,44 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class CheckoutPageTests extends BaseTest
+public class CheckoutPageTests extends GenericTests
 {
-    LoginPage loginPage;
-    ProductListPage productListPage;
-    CartPage cartPage;
     OverviewPage checkoutOverviewPage;
     CompletionPage checkoutCompletionPage;
     final String SUCCESS_MESSAGE = "Thank you for your order!";
     final String DISPATCH_MESSAGE = "Your order has been dispatched, and will arrive just as fast as the pony " +
             "can get there!";
-
-    final ArrayList<String> EXPECTED_CHECKOUT_ITEMS = new ArrayList<String>(
-            Arrays.asList(
-                    "Sauce Labs Backpack",
-                    "Sauce Labs Bolt T-Shirt",
-                    "Sauce Labs Onesie",
-                    "Sauce Labs Bike Light"
-            )
-    );
-
+    final Product PRODUCT = new Product();
     ArrayList<String> ACTUAL_CHECKOUT_ITEMS = new ArrayList<String>();
 
     @Test
     @Order(1)
-    public void verifyImportantElementsDisplayed()
+    public void verifyThatCheckoutItemsAreCorrect()
     {
-        loginPage = LoginPage.visit(browser);
-        Assertions.assertTrue(loginPage.logoDisplayed());
+       loginSuccessfully();
+       addItemsToCart();
+
+       checkoutOverviewPage = CartPage.visit(browser)
+               .goToCheckoutCustomerInfoPage()
+               .goToCheckoutOverviewPage();
+
+        ACTUAL_CHECKOUT_ITEMS = checkoutOverviewPage.getCheckoutItems();
+
+        Assertions.assertEquals(PRODUCT.TEST_CART_ITEMS, ACTUAL_CHECKOUT_ITEMS);
+
     }
 
     @Test
     @Order(2)
-    public void verifyLogInUnsuccessful()
-    {
-        loginPage = LoginPage.visit(browser);
-        Assertions.assertDoesNotThrow(() -> {
-            loginPage.loginSuccessfully(User.invalid());
-        });
-    }
-
-    @Test
-    @Order(3)
-    public void verifyLogInSuccessful()
-    {
-        loginPage = LoginPage.visit(browser);
-        Assertions.assertDoesNotThrow(() -> {
-            productListPage = loginPage.loginSuccessfully(User.valid());
-        });
-
-    }
-
-    @Test
-    @Order(4)
-    public void verifyAddProductToCart()
-    {
-        loginPage = LoginPage.visit(browser);
-
-        Assertions.assertDoesNotThrow(() -> {
-            productListPage = loginPage.loginSuccessfully(User.valid());
-        });
-
-        Assertions.assertDoesNotThrow(() -> {
-            EXPECTED_CHECKOUT_ITEMS.forEach((item) -> {
-                productListPage.addProduct(item, 1);
-            });
-        });
-
-        Assertions.assertDoesNotThrow(() -> {
-            cartPage = productListPage.goToCartPage();
-        });
-
-        ACTUAL_CHECKOUT_ITEMS = cartPage.getCartItems();
-
-        Assertions.assertEquals(EXPECTED_CHECKOUT_ITEMS, ACTUAL_CHECKOUT_ITEMS);
-
-        Assertions.assertDoesNotThrow(() -> {
-            checkoutOverviewPage = cartPage.goToCheckoutCustomerInfoPage().goToCheckoutOverviewPage();
-        });
-
-    }
-
-    @Test
-    @Order(5)
-    public void verifyThatCheckoutItemsAreCorrect()
-    {
-        productListPage = LoginPage.visit(browser).loginSuccessfully(User.valid());
-
-        EXPECTED_CHECKOUT_ITEMS.forEach((item) -> {
-            productListPage.addProduct(item, 1);
-        });
-
-        cartPage = productListPage.goToCartPage();
-        checkoutOverviewPage = cartPage.goToCheckoutCustomerInfoPage().goToCheckoutOverviewPage();
-
-        ACTUAL_CHECKOUT_ITEMS = checkoutOverviewPage.getCheckoutItems();
-        Assertions.assertEquals(EXPECTED_CHECKOUT_ITEMS, ACTUAL_CHECKOUT_ITEMS);
-
-        Assertions.assertDoesNotThrow(() -> {
-            checkoutCompletionPage = checkoutOverviewPage.finish();
-        });
-
-    }
-
-    @Test
-    @Order(6)
     public void verifySuccessMessageIsDisplayed()
     {
-        productListPage = LoginPage.visit(browser).loginSuccessfully(User.valid());
+        loginSuccessfully();
+        addItemsToCart();
 
-        EXPECTED_CHECKOUT_ITEMS.forEach((item) -> {
-            productListPage.addProduct(item, 1);
-        });
-
-        cartPage = productListPage.goToCartPage();
-        checkoutCompletionPage = cartPage.goToCheckoutCustomerInfoPage().goToCheckoutOverviewPage().finish();
+        checkoutCompletionPage = CartPage.visit(browser)
+                .goToCheckoutCustomerInfoPage()
+                .goToCheckoutOverviewPage()
+                .finish();
 
         Assertions.assertTrue(checkoutCompletionPage.successMessageIsDisplayed());
         Assertions.assertTrue(checkoutCompletionPage.dispatchMessageIsDisplayed());

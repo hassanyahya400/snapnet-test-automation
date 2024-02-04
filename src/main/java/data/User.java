@@ -1,24 +1,33 @@
 package data;
 
 import com.github.javafaker.Faker;
+import com.github.javafaker.service.FakeValuesService;
+import com.github.javafaker.service.RandomService;
 
-public class User {
+import java.util.Locale;
+
+public class User
+{
     private final Faker faker = new Faker();
-    private String accountId;
-    private String merchantId;
-    private String email;
-    private String username;
-    private String password;
+    private final FakeValuesService fakeValuesService = new FakeValuesService(new Locale("en-GB"),
+            new RandomService());
+    public String username = faker.name().username();
+    public String email = fakeValuesService.bothify("????##@gmail.com");
+    public String firstName = faker.name().firstName();
+    public String lastName = faker.name().lastName();
+    public String password;
+    public String postalCode = faker.address().zipCode();
 
-
-    public static User valid() {
+    public static User valid()
+    {
         User user = new User();
         user.setUsername("standard_user");
         user.setPassword("secret_sauce");
         return user;
     }
 
-    public static User invalid() {
+    public static User invalid()
+    {
         User user = new User();
         user.setUsername("locked_out_user");
         user.setPassword("wrong_user");
@@ -32,57 +41,25 @@ public class User {
         this.username = username;
     }
 
-    public String getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
-
-    public String getMerchantId() {
-        return merchantId;
-    }
-
-    public void setMerchantId(String merchantId) {
-        this.merchantId = merchantId;
-    }
-
-    public String getEmail() {
+    public String getEmail()
+    {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(String email)
+    {
         this.email = email;
     }
 
-    public String getPassword() {
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+    public String getPassword()
+    {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getBusinessName() {
-        return businessName;
-    }
-
-    public void setBusinessName(String businessName) {
-        this.businessName = businessName;
-    }
-
-    public String getRandomName()
-    {
-        return faker.name().firstName();
-    }
-
-    public String getRandomPostalCode()
-    {
-        return faker.address().zipCode();
-    }
-
-    private String businessName;
 
 
 

@@ -19,6 +19,7 @@ public class BaseTest {
     public void setUp() {
         ChromeOptions options = new ChromeOptions();
         options.setPageLoadStrategy(PageLoadStrategy.NONE);
+//        options.addArguments("start-fullscreen");
         RemoteWebDriver driver = new ChromeDriver(options);
         browser = new Browser(driver);
     }
