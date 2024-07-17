@@ -6,7 +6,7 @@ public abstract class BasePage
 {
     protected Browser browser;
 
-    public static String URL = "https://www.saucedemo.com";
+    public static String URL = "https://hcmatrix-saas.netlify.app";
 
     public BasePage(Browser browser)
     {
