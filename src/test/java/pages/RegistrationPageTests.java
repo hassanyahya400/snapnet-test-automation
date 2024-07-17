@@ -1,7 +1,6 @@
 package pages;
 
 import base.BaseTest;
-import data.User;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -17,14 +16,14 @@ public class RegistrationPageTests extends BaseTest
     }
 
     @Test
-    public void verifySignUpInUnsuccessful()
+    public void verifySignUpIsUnsuccessful()
     {
         registrationPage = RegistrationPage.visit(browser);
 
         Assertions.assertDoesNotThrow(() -> {
-            registrationPage.registerSuccessfully("Mubo Money", "Mubby Tech", "example@email.com", "08143628474",
-                    "P@ssword1",
-                    "captcha");
+            registrationPage.registerSuccessfully("Mubo Money", "Mubby Tech", "example@com", "08143628474",
+                    "P",
+                    "");
         });
     }
 
