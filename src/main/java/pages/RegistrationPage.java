@@ -1,6 +1,5 @@
 package pages;
 
-import data.User;
 import elements.Element;
 import org.openqa.selenium.By;
 import utils.Browser;
